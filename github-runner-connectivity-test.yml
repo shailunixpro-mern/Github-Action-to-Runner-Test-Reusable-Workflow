@@ -1,0 +1,34 @@
+name: Github-Action-to-Runner-Test-Reusable-Workflow
+
+on:
+  workflow_call:
+
+    inputs:
+      runner_name:
+        required: true
+        type: string
+
+    outputs:
+      connectivity_result:
+        value: ${{ jobs.runner_test.outputs.result }}
+
+jobs:
+
+  runner_test:
+
+    runs-on: ${{ inputs.runner_name }}
+
+    outputs:
+      result: ${{ steps.result.outputs.status }}
+
+    steps:
+
+      - name: Run Uptime Test
+        id: uptime_test
+        run: |
+          uptime
+
+      - name: Set Result
+        id: result
+        run: |
+          echo "status=Success" >> $GITHUB_OUTPUT
